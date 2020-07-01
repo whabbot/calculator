@@ -7,3 +7,4 @@ followed by
 pipenv run python main.py
 (may need to use python3 instead of python depending on the python installation)
 
+Note: needs a significant amount of cleanup
