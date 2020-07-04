@@ -40,7 +40,7 @@ def tokeniseExpression(expression):
     """
     expressionString = expression
     tokens = []
-    numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.']
+    numbers = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.'}
     # consecutive numbers are all one token - add each to this variable to be added all at once
     numberToTokenise = ''
     for character in expression:
@@ -148,7 +148,7 @@ def RPNCalculate(RPNTokens):
                 else:
                     left = result.pop()
             except IndexError:
-                print('Not enough numbers!')
+                raise ValueError('Not enough numbers!')
             except:
                 print('An error occurred with RPNCalculate with tokens %s' % RPNTokens)
                 raise
@@ -167,6 +167,8 @@ def calculateFromString(stringExpression):
     returning the result as a number (float or integer)
     '''
     processedExpression = convertUnaryOperators(stringExpression)
+    if not processedExpression:
+        raise ValueError('Not enough numbers!')
     tokens = tokeniseExpression(processedExpression)
     RPNTokens = toReversePolishNotation(tokens)
     return RPNCalculate(RPNTokens)
