@@ -1,42 +1,30 @@
-# using the shunting yard algorithm to parse simple mathematical expressions
-# create tokens -> create tree
+"""calculate.py - Uses shunting yard algorithm to parse simple
+mathematical expressions
+"""
+
 
 from re import sub
-import sys
 
-'''https://en.wikipedia.org/wiki/Shunting-yard_algorithm
-https://stackoverflow.com/questions/1593080/how-can-i-modify-my-shunting-yard-algorithm-so-it-accepts-unary-operators
-    https://en.wikipedia.org/wiki/Parsing'''
 
-# also: http://effbot.org/zone/simple-top-down-parsing.htm
-
-operators = { # accepted mathematical operators with their priorities and associativity
+# accepted mathematical operators with their priorities and associativity
+operators = {
         '(': (0, None),
          ')': (0, None),
         '-' : (2, 'Left'),
         '+' : (2, 'Left'),
         '*' : (3, 'Left'),
         '/' : (3, 'Left'),
-        '**' : (4, 'Right'),
-        'm' : (5, 'Right')
+        'm' : (4, 'Right'),
+        '**' : (5, 'Right')
     }
 
-# def simplifyPlusAndMinus(unary_operators_string):
-#     '''
-#     Simplifies a string of unary + and - operators to the simplest form. Eg:
-#     "+-+-+" -> "+"; "--+--+-++" -> "-"
-#     '''
-#     if list(unary_operators_string).count('m') % 2 == 1:
-#         return 'm'
-#     else:
-#         return 'p'
-
 def convertUnaryOperators(expression):
-    '''
-    Turns all unary operators "+" and "-" in an expression into "p" and "m" respectively
+    """
+    Turns all unary operators "+" and "-" in an expression into "p" and
+    "m" respectively
 
-    Note: want \D that ignores )
-    '''
+    Note: want \D that ignores ')'
+    """
     # remove spaces from expression
     expression = expression.replace(' ', '')
     # remove all unary pluses
@@ -45,18 +33,11 @@ def convertUnaryOperators(expression):
     converted_pluses_and_minuses = sub(r'(?<=[^\d)])-+?|^-+?', r'm', converted_pluses)
     return converted_pluses_and_minuses
 
-# def processUnaryOperators(expression):
-#     '''
-#     Processes an expression with unary "+" and "-" operators into a form using only binary
-#     operators which is usable in tokeniseExpression(). Eg:
-#     "(+2 - 2)" -> "(2 - 2)"; "(-2 + +2)" -> "((0 - 2) + 2)"
-#     '''
-#     return sub(r'\D-', '(0-1)*', ' ' + expression) # kind of works. Example where it doesn't: 2**-3 -> 2**(0-1)*3 == (2**-1)*3. Also need it to ignore spaces
-
 def tokeniseExpression(expression):
-    '''
-    Takes a mathematical expression as a string and returns a list of the corresponding tokens
-    '''
+    """
+    Takes a mathematical expression as a string and returns a list of
+    the corresponding tokens
+    """
     expressionString = expression
     tokens = []
     numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.']
@@ -86,10 +67,10 @@ def tokeniseExpression(expression):
     return tokens
 
 def toReversePolishNotation(tokens):
-    '''
+    """
     Takes a list of tokens in infix-notation order and returns a list of tokens in reverse-Polish-
     notation order
-    '''
+    """
     queue = []
     stack = []
     for token in tokens:

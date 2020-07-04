@@ -1,19 +1,8 @@
 import random
-import calculate
+import prog.calculate as calculate
+import pytest
 
-def testSimplifyPlusAndMinus(expression):
-    functionOne = simplifyPlusAndMinus(expression)
-    if eval(expression) > 0:
-        evalOne = '+'
-    else:
-        evalOne = '-'
-    try:
-        assert functionOne == evalOne
-        print('Expression: ' + expression + ' OK: ' + functionOne + ' ' + str(eval(expression)))
-    except:
-        print('Expression: ' + expression + ' FAILED'  + functionOne + ' ' + str(eval(expression)))
-
-def testconvertUnaryOperators():
+def test_convertUnaryOperators():
     print('This: ', calculate.convertUnaryOperators('-1'), '\nFrom: -1')
     print('This: ', calculate.convertUnaryOperators('+1'), '\nFrom: +1')
     for i in range(10):
@@ -35,7 +24,7 @@ def testconvertUnaryOperators():
         converted = calculate.convertUnaryOperators(expression)
         print('This: ', converted, converted.count('m'), '\nFrom: ', expression, expression.count('-'))
 
-def testCalculateFromString():
+def test_calculateFromString():
     for i in ['1', '1+1', '1-1', '1*1', '1/1', '12', '12+1', '12-1', '21*1', '(12/1)', '3+4*2 / ( 1 - 5 ) ** 2 ** 3',
     '!', '/', '**', '+', '-', '*', '(', ')', '3+4*2 / ( 1 - 5 ) ** 2 ** 3!', 'ur mum', '((1+1)', '(1+1)/12-123)',
     '1--1', '1+-1', '12++(12--+-+2)--2', '-1']:
@@ -50,4 +39,3 @@ def testCalculateFromString():
         except Exception as e:
             print('Input: "' + i + '" gave error: ' + str(e))
 
-testconvertUnaryOperators()
