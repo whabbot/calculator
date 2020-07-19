@@ -1,16 +1,13 @@
-# using the shunting yard algorithm to parse simple mathematical expressions
-# create tokens -> create tree
+"""calculate.py - Uses shunting yard algorithm to parse simple
+mathematical expressions
+"""
+
 
 from re import sub
-import sys
 
-'''https://en.wikipedia.org/wiki/Shunting-yard_algorithm
-https://stackoverflow.com/questions/1593080/how-can-i-modify-my-shunting-yard-algorithm-so-it-accepts-unary-operators
-    https://en.wikipedia.org/wiki/Parsing'''
 
-# also: http://effbot.org/zone/simple-top-down-parsing.htm
-
-operators = { # accepted mathematical operators with their priorities and associativity
+# accepted mathematical operators with their priorities and associativity
+operators = {
         '(': (0, None),
          ')': (0, None),
         '-' : (2, 'Left'),
@@ -18,25 +15,11 @@ operators = { # accepted mathematical operators with their priorities and associ
         '*' : (3, 'Left'),
         '/' : (3, 'Left'),
         '**' : (4, 'Right'),
-        'm' : (5, 'Right')
+        'm' : (4, 'Right'),
     }
 
-# def simplifyPlusAndMinus(unary_operators_string):
-#     '''
-#     Simplifies a string of unary + and - operators to the simplest form. Eg:
-#     "+-+-+" -> "+"; "--+--+-++" -> "-"
-#     '''
-#     if list(unary_operators_string).count('m') % 2 == 1:
-#         return 'm'
-#     else:
-#         return 'p'
-
 def convertUnaryOperators(expression):
-    '''
-    Turns all unary operators "+" and "-" in an expression into "p" and "m" respectively
-
-    Note: want \D that ignores )
-    '''
+    """Removes unary '+' and turns unary '-' into 'm' """
     # remove spaces from expression
     expression = expression.replace(' ', '')
     # remove all unary pluses
@@ -45,21 +28,14 @@ def convertUnaryOperators(expression):
     converted_pluses_and_minuses = sub(r'(?<=[^\d)])-+?|^-+?', r'm', converted_pluses)
     return converted_pluses_and_minuses
 
-# def processUnaryOperators(expression):
-#     '''
-#     Processes an expression with unary "+" and "-" operators into a form using only binary
-#     operators which is usable in tokeniseExpression(). Eg:
-#     "(+2 - 2)" -> "(2 - 2)"; "(-2 + +2)" -> "((0 - 2) + 2)"
-#     '''
-#     return sub(r'\D-', '(0-1)*', ' ' + expression) # kind of works. Example where it doesn't: 2**-3 -> 2**(0-1)*3 == (2**-1)*3. Also need it to ignore spaces
-
 def tokeniseExpression(expression):
-    '''
-    Takes a mathematical expression as a string and returns a list of the corresponding tokens
-    '''
+    """
+    Takes a mathematical expression as a string and returns a list of
+    the corresponding tokens
+    """
     expressionString = expression
     tokens = []
-    numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.']
+    numbers = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.'}
     # consecutive numbers are all one token - add each to this variable to be added all at once
     numberToTokenise = ''
     for character in expression:
@@ -86,10 +62,10 @@ def tokeniseExpression(expression):
     return tokens
 
 def toReversePolishNotation(tokens):
-    '''
+    """
     Takes a list of tokens in infix-notation order and returns a list of tokens in reverse-Polish-
     notation order
-    '''
+    """
     queue = []
     stack = []
     for token in tokens:
@@ -102,7 +78,12 @@ def toReversePolishNotation(tokens):
         # * the same priority as the token and the token is left associative
         # in which cases the operator on the stack is sent to the queue
         elif token in operators and token != '(' and token != ')':
-            while stack and stack[-1] in operators and stack[-1] != '(' and (operators[stack[-1]][0] > operators[token][0] or operators[stack[-1]][0] == operators[token][0] and operators[token][1] == 'Left'):
+            while (stack
+            and stack[-1] in operators
+            and stack[-1] != '('
+            and (operators[stack[-1]][0] > operators[token][0]
+                or operators[stack[-1]][0] == operators[token][0]
+                and operators[token][1] == 'Left')):
                 queue.append(stack.pop())
             stack.append(token)
         # left brackets are added to the stack
@@ -128,15 +109,15 @@ def toReversePolishNotation(tokens):
     return queue
 
 def operation(left, token, right):
-    '''
-    Takes a string representing an operator and two numbers, left and right, and returns the
+    """
+    Takes two numbers and a string representing an operator and returns the
     result of the mathematical computation "left [token] right", or "[token]right" for unary
     operators
     Eg:
     token = '-', left = 1, right = 2 -> returns the result of 1 - 2 = -1
     token = '**', left = 3, right = 2 -> returns the result of 3 ** 2 = 9
     token = 'm', right = 2 -> returns -2
-    '''
+    """
     if token == '+':
         return left + right
     elif token == '-':
@@ -151,12 +132,14 @@ def operation(left, token, right):
         return -right
 
 def RPNCalculate(RPNTokens):
-    '''
+    """
     Takes a list of tokens in Reverse-Polish-Notation order and performs the corresponseing
     mathematical computations, returning the result
-    '''
+    """
+    print(RPNTokens)
     result = []
     for token in RPNTokens:
+        print(token)
         if type(token) == float:
             result.append(token)
         elif token in operators:
@@ -167,9 +150,9 @@ def RPNCalculate(RPNTokens):
                 else:
                     left = result.pop()
             except IndexError:
-                print('Not enough numbers!')
-            except:
-                print('An error occurred with RPNCalculate with tokens %s' % RPNTokens)
+                raise ValueError('Not enough numbers!')
+            except Exception as e:
+                print(f'An error occurred with RPNCalculate with tokens {RPNTokens}: {e}')
                 raise
             else:
                 result.append(operation(left, token, right))
@@ -181,11 +164,13 @@ def RPNCalculate(RPNTokens):
             return result[0]
 
 def calculateFromString(stringExpression):
-    '''
+    """
     Takes a mathematical expression as a string and performs the corresponding calculations,
     returning the result as a number (float or integer)
-    '''
+    """
     processedExpression = convertUnaryOperators(stringExpression)
+    if not processedExpression:
+        raise ValueError('Not enough numbers!')
     tokens = tokeniseExpression(processedExpression)
     RPNTokens = toReversePolishNotation(tokens)
     return RPNCalculate(RPNTokens)
