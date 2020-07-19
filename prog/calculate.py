@@ -136,10 +136,8 @@ def RPNCalculate(RPNTokens):
     Takes a list of tokens in Reverse-Polish-Notation order and performs the corresponseing
     mathematical computations, returning the result
     """
-    print(RPNTokens)
     result = []
     for token in RPNTokens:
-        print(token)
         if type(token) == float:
             result.append(token)
         elif token in operators:
