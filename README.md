@@ -1,10 +1,43 @@
-A basic calculator app in Python.
+# **Calculator**
+**A basic calculator app in Python.**
 
-To run with pipenv installed:
-Inside the directory with main.py and calculate.py:
+Uses shunting yard algorithm to evaluate simple mathematical expressions.
+
+Supports:
+* Addition
+* Subtraction
+* Multiplication
+* Division
+* Exponentiation
+* Brackets
+* Unary positive and negative
+
+## Installation
+
+First make sure [Python 3.8](https://www.python.org/) and [Pipenv](https://pipenv.pypa.io/en/latest/) are installed.
+
+Clone the repository and enter the root directory:
+```
+git clone https://github.com/whabbot/calculator.git
+cd calculator
+```
+Install dependencies using Pipenv:
+```
 pipenv install
-followed by
-pipenv run python main.py
-(may need to use python3 instead of python depending on the python installation)
+``` 
+Run the app from inside root directory:
+```
+pipenv run python prog/main.py
+```
 
-Note: needs a significant amount of cleanup
+### To install dev dependencies and run tests
+Install dev dependencies using Pipenv:
+```
+pipenv install --dev
+```
+This installs [pytest](https://docs.pytest.org) which is used for testing. Tests are located in the tests directory.
+
+Run tests using pytest:
+```
+pytest
+```
