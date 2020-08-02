@@ -7,7 +7,6 @@ verify_ssl = true
 pytest = "*"
 
 [packages]
-prog = {editable = true, path = "."}
 
 [requires]
 python_version = "3.8"
