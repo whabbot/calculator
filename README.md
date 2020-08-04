@@ -12,7 +12,7 @@ Supports:
 * Brackets
 * Unary positive and negative
 
-## Installation
+## Installation and Usage
 
 First make sure [Python 3.8](https://www.python.org/) and [Pipenv](https://pipenv.pypa.io/en/latest/) are installed.
 
